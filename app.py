@@ -42,15 +42,33 @@ def view_authors():
     for author in authors:
         print(Author(id=author["id"], name=author["name"]))
 
-def view_magazines():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM magazines')
-    magazines = cursor.fetchall()
-    conn.close()
-    print("\nMagazines:")
-    for magazine in magazines:
-        print(Magazine(id=magazine["id"], name=magazine["name"], category=magazine["category"]))
+def view_magazine_article_titles():
+    magazine_id = int(input("Enter magazine ID: "))
+    try:
+        magazine = Magazine(id=magazine_id)
+        titles = magazine.article_titles()
+        if titles:
+            print("\nArticle Titles:")
+            for title in titles:
+                print(title)
+        else:
+            print("No articles found for this magazine.")
+    except ValueError as e:
+        print(f'Error: {e}')
+
+def view_magazine_contributing_authors():
+    magazine_id = int(input("Enter magazine ID: "))
+    try:
+        magazine = Magazine(id=magazine_id)
+        authors = magazine.contributing_authors()
+        if authors:
+            print("\nContributing Authors:")
+            for author in authors:
+                print(author)
+        else:
+            print("No contributing authors found for this magazine.")
+    except ValueError as e:
+        print(f'Error: {e}')
 
 def view_articles():
     conn = get_db_connection()
@@ -71,7 +89,9 @@ def main_menu():
         print("4. View Authors")
         print("5. View Magazines")
         print("6. View Articles")
-        print("7. Exit")
+        print("7. View Magazine Article Titles")
+        print("8. View Magazine Contributing Authors")
+        print("9. Exit")
 
         choice = input("Enter your choice: ")
         if choice == '1':
@@ -87,6 +107,10 @@ def main_menu():
         elif choice == '6':
             view_articles()
         elif choice == '7':
+            view_magazine_article_titles()
+        elif choice == '8':
+            view_magazine_contributing_authors()    
+        elif choice == '9':
             print("Exiting...")
             break
         else:
